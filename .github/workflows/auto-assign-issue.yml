@@ -1,0 +1,85 @@
+name: Auto Assign Issue
+
+on:
+  issues:
+    types: [opened]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+run-name: Auto Assign Issue
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign Author
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ env.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.addAssignees({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              assignees: ["${{ github.actor }}"]
+            })
+
+      - name: Assign Labels
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ env.GITHUB_TOKEN }}
+          script: |
+            const issueDescription = context.payload.issue.body;
+            const priorityMatch = issueDescription.match(/Priority:\s*(low|normal|high|urgent)/i);
+            const labels = ["automated-issue"];
+
+            if (priorityMatch && priorityMatch.length) {
+              const match = priorityMatch[0];
+              const level = match.split(":");
+
+              if (level && level.length > 1) {
+                labels.push(level[1].toLowerCase().trim());
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: labels
+            });
+
+      - name: Extract ClickUp Task ID
+        id: issue_task_id
+        run: echo "TASK_ID=$(echo ${{ github.event.issue.title }} | grep -oP '(?<=\[CU-)[A-Za-z0-9]+(?=\])')" >> "$GITHUB_OUTPUT"
+
+      - name: Obtain Branch Prefix
+        id: branch_prefix
+        run: |
+          if [ -z "${{ vars.CLICKUP_BRANCH_PREFIX }}" ]; then
+            echo "::error::The 'CLICKUP_BRANCH_PREFIX' variable is not set. Please set it in your repository secrets."
+            exit 1
+          fi
+
+          # if it is, echo the value
+          echo "BRANCH_PREFIX=${{ vars.CLICKUP_BRANCH_PREFIX }}" >> "$GITHUB_OUTPUT"
+
+      - name: Branch Comment Creation
+        uses: actions/github-script@v6
+        if: steps.issue_task_id.outputs.TASK_ID != ''
+        with:
+          github-token: ${{ env.GITHUB_TOKEN }}
+          script: |
+            const branchName = `${{ steps.branch_prefix.outputs.BRANCH_PREFIX }}${{ steps.issue_task_id.outputs.TASK_ID }}`
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "To create a branch for this issue, run the following command:\n\n```bash\ngit checkout -b " + branchName + "\n```\n\nOnce you've created the branch, you can push it to GitHub with:\n\n```bash\ngit push -u origin " + branchName + "\n```\n\nYou can then create a pull request for this issue by visiting:\n\nhttps://github.com/" + context.repo.owner + "/" + context.repo.repo + "/compare/" + branchName + "?expand=1"
+            });

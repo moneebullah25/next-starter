@@ -1,0 +1,58 @@
+name: Auto Link Branch to Issue
+
+on:
+  create:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+run-name: Auto Link Branch to Issue
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  auto-link-branch-to-issue:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, vars.CLICKUP_BRANCH_PREFIX)
+    steps:
+      - name: Extract ClickUp Task ID
+        id: branch_task_id
+        run: echo "TASK_ID=${GITHUB_REF#refs/heads/task/}" >> "$GITHUB_OUTPUT"
+
+      - name: Auto Link Branch to Issue
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const task_id = "${{ steps.branch_task_id.outputs.TASK_ID }}";
+
+            const issue = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${{ github.repository }} in:title ${task_id} is:issue`,
+            });
+
+            if (issue.data.total_count === 0) {
+              console.log(`No issue found for task ${task_id}`);
+              return;
+            }
+
+            const issue_number = issue.data.items[0].number;
+            const branch_name = context.ref.replace('refs/heads/', '');
+            const branch_link = `https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${branch_name}`;
+
+            console.log(`Linking issue #${issue_number} to branch ${branch_name}`);
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: `Branch [${branch_name}](${branch_link}) automatically linked to this issue.`,
+            });
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              labels: ['branch-linked'],
+            });
