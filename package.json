@@ -1,0 +1,50 @@
+{
+  "name": "next-base-repository",
+  "version": "1.0.0",
+  "description": "Github workflows that are used for the CI/CD pipelines that integrate with ClickUp and the deployment servers.",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "node scripts/start-server.js --command=dev",
+    "build": "next build",
+    "start": "node scripts/start-server.js --command=start",
+    "lint": "next lint",
+    "test": "ts-mocha --recursive tests/**/*.test.ts -p ./tsconfig.mocha.json",
+    "upgrade": "npx ncu -u && npm install"
+  },
+  "dependencies": {
+    "@mdx-js/loader": "^3.0.0",
+    "@mdx-js/react": "^3.0.0",
+    "@next/mdx": "^14.0.3",
+    "clsx": "^2.0.0",
+    "next": "^14.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "author": "Michael Cizek",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/mdx": "^2.0.10",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.9.4",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "autoprefixer": "^10.4.16",
+    "chai": "^4.3.10",
+    "dotenv": "^16.3.1",
+    "dotenv-expand": "^10.0.0",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "^14.0.3",
+    "mocha": "^10.2.0",
+    "postcss": "^8.4.31",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.3.5",
+    "ts-mocha": "^10.0.0",
+    "typescript": "^5.3.2"
+  }
+}
