@@ -6,9 +6,6 @@ on:
       - opened
       - synchronize
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 run-name: Generate Branch Changelog
 
 concurrency:
@@ -16,18 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  branch-changelog:
+  generate-pull-request-changelog:
+    if: contains(github.event.pull_request.labels.*.name, 'ignore-branch-changelog') == false
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Bash Script
-        if: contains(github.event.pull_request.labels.*.name, 'ignore-branch-changelog') == false
-        run: |
-          bash ${{ github.workspace }}/.github/scripts/branch-changelog.sh \
-            -t ${{ env.GITHUB_TOKEN }} \
-            -r ${{ github.repository }} \
-            -p ${{ github.event.pull_request.number }}
-        shell: bash
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install octokit
+        run: npm install @octokit/action
+
+      - name: Generate Changelog
+        run: node .github/actions/changelog.v1.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
