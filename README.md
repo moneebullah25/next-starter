@@ -1,58 +1,56 @@
-# ClickUp Integration Workflows
+# Next.js Base Repository
 
-Github workflows that are used for the CI/CD pipelines that integrate with ClickUp and the deployment servers.
+A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker support.
 
-## Setup
+## Features
 
-1. Template this repository ensuring you **copy** all branches to the new repository.
-2. Add the following repository variables
+- Next.js 15+
+- React 19
+- TypeScript
+- Tailwind CSS
+- Fully Dockerized
 
-```
-CLICKUP_BRANCH_PREFIX
-- task/CU-
+## Getting Started
 
-CLICKUP_PULL_REQUEST_PREFIX
-- [CU-
+This project is fully containerized with Docker. All development and production environments run inside Docker containers.
 
-TEMPLATE_PARENT_REMOTE
-- https://github.com/itsmichaelbtw/cu-integration-workflows
-```
+### Prerequisites
 
-**NOTE:** Ensure there is a ClickUp workspace and webhooks have been setup.
+- Docker
+- Docker Compose
 
-3. Disable "Wikis"
-4. Disable "Projects"
-5. Set merge commit message to "pull request title and description"
-6. Disable "squash" and "rebase" merging
-7. Enable automatic branch deletion
-8. Create a branch protection rule with these 2 patterns:
+## Docker Usage
 
-```
-Pattern: task/*
+Set up environment variables:
+   - Copy `.env.template` to `.env`
+   - Update the variables as needed
 
-Rules:
+### Development
 
-  - Require status checks to pass before merging
-    - Set the check to "branch-changelog"
-  - Allow deletions
+Start the development environment:
+```bash
+docker-compose -f docker-compose.development.yml up
 ```
 
-```
-Pattern: development
+You can modify the port within the `.env` file.
 
-Rules:
+### Production
 
-  - Require status checks to pass before merging
-    - Set the check to "branch-changelog"
-  - Allow force pushes
-    - Add yourself
+Start the production environment:
+```bash
+docker-compose -f docker-compose.production.yml up
 ```
 
-10. Make sure Github Actions has `read and write` permissions in your repository settings.
-11. Run the `repository-setup.yml` workflow to setup the repository.
+## Project Structure
 
-### ClickUp and Webhooks
+- `/app` - Next.js app directory
+- `/components` - React components
+- `/context` - React context providers
+- `/css` - CSS files including Tailwind
+- `/hooks` - Custom React hooks
+- `/types` - TypeScript type definitions
+- `/utils` - Utility functions
 
-1. Add the two automation tasks to the Clickup workspace (copy from another project)
-2. Add the repo to the Github application in Clickup
-3. Setup a new Discord webhook and channel in the dev server and add the url to the webhook settings
+## License
+
+MIT
