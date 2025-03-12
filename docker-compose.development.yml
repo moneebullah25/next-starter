@@ -1,0 +1,22 @@
+name: $PROJECT_NAME
+
+services:
+  nextjs:
+    user: $UID
+    hostname: nextjs-server
+    container_name: nextjs-server-development
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    ports:
+      - $NEXTJS_EXTERNAL_PORT:$NEXTJS_INTERNAL_PORT
+    environment:
+      - NODE_ENV=development
+      - PORT=$NEXTJS_INTERNAL_PORT
+    command: npm run dev
+
+volumes:
+  node_modules:
