@@ -20,7 +20,9 @@ export function LazyComponent({ objectName, __import }: Props) {
         default: _[objectName]
       };
     });
-  }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [objectName]);
 
   return (
     <React.Suspense fallback={null}>

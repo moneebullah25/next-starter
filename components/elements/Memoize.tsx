@@ -10,7 +10,8 @@ interface Props<T> extends WithChildren<"required", ChildrenCallback<T>> {
 }
 
 export function Memoize<T>({ compute, dependencies = [], children }: Props<T>) {
-  const memo = useMemo(compute, dependencies);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memo = useMemo(() => compute(), dependencies);
 
   return <>{children(memo)}</>;
 }
