@@ -1,4 +1,4 @@
-name: Generate Branch Changelog
+name: Generate PR Desription
 
 on:
   pull_request:
@@ -6,16 +6,8 @@ on:
       - opened
       - synchronize
 
-run-name: Generate Branch Changelog
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   generate-pull-request-changelog:
-    if: contains(github.event.pull_request.labels.*.name, 'ignore-branch-changelog') == false
-
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +23,7 @@ jobs:
         run: npm install @octokit/action
 
       - name: Generate Changelog
-        run: node .github/actions/changelog.v1.js
+        run: node .github/actions/changelog.v3.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
