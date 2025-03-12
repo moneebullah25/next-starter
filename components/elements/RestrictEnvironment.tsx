@@ -2,14 +2,12 @@
 
 import type { WithChildren } from "../../types";
 
-import React, { Suspense } from "react";
-
 interface Props extends WithChildren {
-  environment: typeof NODE_ENVIRONMENT;
+  environment: NodeJS.ProcessEnv["NODE_ENV"];
 }
 
 export function RestrictEnvironment({ environment, children }: Props) {
-  if (NODE_ENVIRONMENT === environment) {
+  if (process.env.NODE_ENV === environment) {
     return children;
   }
 
