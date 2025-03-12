@@ -1,4 +1,4 @@
-# Next.js Base Repository
+# NextJS Dockerised
 
 A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker support.
 
@@ -8,12 +8,12 @@ A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker supp
 - React 19
 - TypeScript
 - Tailwind CSS
-- Fully Dockerized
+- Fully Dockerised
 - Prettier code formatting
 
 ## Getting Started
 
-This project is fully containerized with Docker. All development and production environments run inside Docker containers.
+This project is fully containerised with Docker. All development and production environments run inside Docker containers.
 
 ### Prerequisites
 
