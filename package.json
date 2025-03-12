@@ -11,7 +11,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "ts-mocha --recursive tests/**/*.test.ts -p ./tsconfig.mocha.json",
     "upgrade": "npx ncu -u && npm install"
   },
   "dependencies": {
@@ -28,26 +27,18 @@
   "author": "Michael Cizek",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^5.2.0",
-    "@types/chai-as-promised": "^8.0.2",
     "@types/mdx": "^2.0.13",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "autoprefixer": "^10.4.21",
-    "chai": "^5.2.0",
-    "dotenv": "^16.4.7",
-    "dotenv-expand": "^12.0.1",
     "eslint": "^9.22.0",
     "eslint-config-next": "^15.2.2",
-    "mocha": "^11.1.0",
     "npm-check-updates": "^17.1.15",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "tailwindcss": "^4.0.13",
-    "ts-mocha": "^11.1.0",
     "typescript": "^5.8.2"
   }
 }
