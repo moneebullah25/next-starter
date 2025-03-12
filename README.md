@@ -53,6 +53,55 @@ This project includes VS Code launch configurations for Docker containers:
 
 The launch configurations will build and start the Docker containers in the appropriate mode. Remember to stop the debug session when you are done.
 
+## GitHub Actions
+
+This project includes automated GitHub Actions workflows:
+
+### PR Description Generator
+
+The repository automatically generates a changelog in your PR descriptions based on commit messages:
+
+- Triggered when PRs are opened or updated
+- Parses commit messages using conventional commit format
+- Groups changes by type (features, fixes, etc.)
+- Inserts a formatted changelog into the PR description
+
+For best results, format your commit messages following the conventional commit style:
+
+Where `<type>` is one of:
+- `feat`: New features
+- `fix`: Bug fixes
+- `docs`: Documentation changes
+- `refactor`: Code refactoring
+- `build`: Build-related changes
+- `ci`: CI/CD changes
+
+The changelog is automatically inserted between special comment markers in the PR description. You can still add your own content before or after the changelog.
+
+### Linting
+
+The repository includes automated linting and type checking:
+
+- Runs when PRs are opened or updated
+- Validates code quality and adherence to project standards
+- Uses ESLint to check for code quality issues
+- Runs TypeScript compiler to verify type safety
+- Automatically comments on the PR if any checks fail
+
+You can also run these checks locally:
+
+```bash
+# Run ESLint
+npm run lint
+
+# Run TypeScript type checking
+npm run type-check
+```
+
+### Deployment
+
+**Coming soon**
+
 ## Project Structure
 
 - `/app` - Next.js app directory
@@ -60,6 +109,7 @@ The launch configurations will build and start the Docker containers in the appr
 - `/context` - React context providers
 - `/css` - CSS files including Tailwind
 - `/hooks` - Custom React hooks
+- `/lib` - Custom libraries
 - `/types` - TypeScript type definitions
 - `/utils` - Utility functions
 

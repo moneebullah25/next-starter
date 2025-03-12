@@ -11,7 +11,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "upgrade": "npx ncu -u && npm install"
+    "upgrade": "npx ncu -u && npm install",
+    "type-check": "npx tsc --noEmit"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
