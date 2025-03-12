@@ -25,7 +25,10 @@ export function withDispatchReducer<T extends object, Y extends Context>(
           ...action.payload
         };
       default:
-        return fn();
+        return {
+          ...state,
+          ...fn()
+        };
     }
   };
 }

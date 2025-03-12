@@ -9,6 +9,6 @@ export interface ContextReducerInterface<T, P> {
 /**
  * Each initial state has a dispatch event
  */
-export type InitialStateWithDispatch<T, P extends object> = {
-  dispatch: React.Dispatch<ContextReducerInterface<T, P>>;
+export type InitialStateWithDispatch<T, P extends object, Dispatcher extends string> = {
+  [key in Dispatcher]: React.Dispatch<ContextReducerInterface<T, P>>;
 } & P;
