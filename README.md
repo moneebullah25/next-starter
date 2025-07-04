@@ -6,6 +6,7 @@ A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker supp
 
 - Next.js 15+
 - React 19
+- Husky
 - TypeScript
 - Tailwind CSS
 - Fully Dockerised
@@ -13,7 +14,7 @@ A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker supp
 
 ## Getting Started
 
-This project is fully containerised with Docker. All development and production environments run inside Docker containers.
+This project is fully containerised with Docker. Production environments run inside Docker containers.
 
 ### Prerequisites
 
@@ -26,32 +27,18 @@ Set up environment variables:
    - Copy `.env.template` to `.env`
    - Update the variables as needed
 
-### Development
-
-Start the development environment:
-```bash
-docker-compose -f docker-compose.development.yml up
-```
-
-You can modify the port within the `.env` file.
-
 ### Production
 
 Start the production environment:
 ```bash
-docker-compose -f docker-compose.production.yml up
+docker-compose --env-file .env.prod -f docker-compose.yml up -d
 ```
 
-### VS Code Integration
+Or run
 
-This project includes VS Code launch configurations for Docker containers:
-
-1. Open the project in VS Code
-2. Navigate to the Run and Debug panel (Ctrl+Shift+D or Cmd+Shift+D)
-3. Select either "Docker Compose (Development)" or "Docker Compose (Production)" from the dropdown
-4. Press the play button or F5 to start the containers
-
-The launch configurations will build and start the Docker containers in the appropriate mode. Remember to stop the debug session when you are done.
+```bash
+pnpm run docker:prod
+```
 
 ## GitHub Actions
 

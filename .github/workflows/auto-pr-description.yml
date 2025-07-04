@@ -1,4 +1,4 @@
-name: Generate PR Desription
+name: Generate PR Description
 
 on:
   pull_request:
@@ -18,10 +18,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Install octokit
-        run: npm install @octokit/action
+        run: pnpm add @octokit/action
 
       - name: Generate Changelog
         run: node .github/actions/changelog.v3.js
