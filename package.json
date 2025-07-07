@@ -1,45 +1,61 @@
 {
-  "name": "nextjs-dockerised",
+  "name": "next-starter",
   "description": "A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker support",
   "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=20.0.0"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write .",
     "upgrade": "npx ncu -u && npm install",
-    "type-check": "npx tsc --noEmit"
+    "type-check": "npx tsc --noEmit",
+    "docker:prod:build": "docker compose --env-file ./.env.prod -f docker-compose.yml build",
+    "docker:prod": "docker compose --env-file ./.env.prod -f docker-compose.yml up -d",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
-    "@next/mdx": "^15.2.2",
+    "@next/mdx": "^15.3.5",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.0.13",
+    "@tailwindcss/postcss": "^4.1.11",
     "clsx": "^2.1.1",
-    "next": "^15.2.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next": "^15.3.5",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
-  "author": "Michael Cizek",
+  "author": "Muneeb Ullah",
   "license": "MIT",
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/mdx": "^2.0.13",
-    "@types/node": "^22.13.10",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9.22.0",
-    "eslint-config-next": "^15.2.2",
-    "npm-check-updates": "^17.1.15",
-    "postcss": "^8.5.3",
-    "prettier": "^3.5.3",
+    "eslint": "^9.30.1",
+    "eslint-config-next": "^15.3.5",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "npm-check-updates": "^18.0.1",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "tailwindcss": "^4.0.13",
-    "typescript": "^5.8.2"
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3"
   }
 }

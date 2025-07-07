@@ -5,7 +5,6 @@ node_modules
 /build
 
 .env
-.env.*
  
 !.env.template
 tsconfig.tsbuildinfo
