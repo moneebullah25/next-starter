@@ -31,7 +31,7 @@ Set up environment variables:
 
 Start the production environment:
 ```bash
-docker-compose --env-file .env.prod -f docker-compose.yml up -d
+docker compose --env-file .env.prod -f docker compose.yml up -d
 ```
 
 Or run
