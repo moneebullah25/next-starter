@@ -47,7 +47,7 @@ Make sure the following are installed on your machine:
 Set up your environment variables:
 
 ```bash
-cp .env.template .env
+cp .env.example .env
 ```
 
 Then update `.env` with your custom values.
