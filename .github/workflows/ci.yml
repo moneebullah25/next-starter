@@ -31,6 +31,16 @@ jobs:
 
       - name: Run TypeScript type checking
         run: pnpm run type-check
+        
+      - name: 🐳 Install Docker Compose (CLI plugin)
+        run: |
+          mkdir -p ~/.docker/cli-plugins/
+          curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+          chmod +x ~/.docker/cli-plugins/docker-compose
+          docker compose version
+
+      - name: 🐳 Build Docker Image (prod)
+        run: pnpm docker:prod:build
 
       - name: Comment on PR if checks fail
         if: ${{ failure() && github.event_name == 'pull_request' }}
@@ -44,13 +54,3 @@ jobs:
               repo: context.repo.repo,
               body: '❌ Linting or type checking failed. Please fix the issues and push again.'
             })
-
-      - name: 🐳 Install Docker Compose (CLI plugin)
-        run: |
-          mkdir -p ~/.docker/cli-plugins/
-          curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
-          chmod +x ~/.docker/cli-plugins/docker-compose
-          docker compose version
-
-      - name: 🐳 Build Docker Image (prod)
-        run: pnpm docker:prod:build
