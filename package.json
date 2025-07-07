@@ -20,8 +20,8 @@
     "format": "prettier --write .",
     "upgrade": "npx ncu -u && npm install",
     "type-check": "npx tsc --noEmit",
-    "docker:prod:build": "docker compose --env-file .env.prod -f docker-compose.yml build",
-    "docker:prod": "docker compose --env-file .env.prod -f docker-compose.yml up -d",
+    "docker:prod:build": "docker compose --env-file ./.env.prod -f docker-compose.yml build",
+    "docker:prod": "docker compose --env-file ./.env.prod -f docker-compose.yml up -d",
     "prepare": "husky install"
   },
   "dependencies": {
