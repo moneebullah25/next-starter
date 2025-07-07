@@ -1,105 +1,234 @@
-# NextJS Dockerised
 
-A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker support.
+---
 
-## Features
+<p align="center">
+  <img src="https://www.svgrepo.com/show/354113/nextjs-icon.svg" height="28px" alt="Next.js Logo" />
+</p>
 
-- Next.js 15+
-- React 19
-- Husky
-- TypeScript
-- Tailwind CSS
-- Fully Dockerised
-- Prettier code formatting
+<h1 align="center">NextJS Dockerised</h1>
 
-## Getting Started
+<p align="center">
+  A modern, production-ready <strong>Next.js</strong> starter template powered by <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>, and fully <strong>Dockerised</strong> for seamless development and deployment.
+</p>
 
-This project is fully containerised with Docker. Production environments run inside Docker containers.
+---
 
-### Prerequisites
+## 🚀 Features
 
-- Docker
-- Docker Compose
+* ✅ Next.js 15+
+* ⚛️ React 19
+* 🐶 Husky for Git hooks
+* ✨ TypeScript
+* 💨 Tailwind CSS
+* 🐳 Fully Dockerised
+* 🧼 Prettier for consistent formatting
+* 🔍 ESLint & Type Checking
+* 🤖 GitHub Actions Integration
 
-## Docker Usage & Debugging
+---
 
-Set up environment variables:
-   - Copy `.env.template` to `.env`
-   - Update the variables as needed
+## 📦 Getting Started
 
-### Production
+This project is designed to run inside Docker containers for both development and production environments.
 
-Start the production environment:
+### ✅ Prerequisites
+
+Make sure the following are installed on your machine:
+
+* [Docker](https://www.docker.com/)
+* [Docker Compose](https://docs.docker.com/compose/)
+
+---
+
+## 🐳 Docker Usage & Debugging
+
+### 📄 Environment Variables
+
+Set up your environment variables:
+
 ```bash
-docker compose --env-file .env.prod -f docker compose.yml up -d
+cp .env.template .env
 ```
 
-Or run
+Then update `.env` with your custom values.
+
+### 🚢 Production Deployment
+
+#### Option 1: With Docker Compose
 
 ```bash
-pnpm run docker:prod
+docker compose --env-file .env.prod -f docker-compose.yml up -d
 ```
 
-## GitHub Actions
-
-This project includes automated GitHub Actions workflows:
-
-### PR Description Generator
-
-The repository automatically generates a changelog in your PR descriptions based on commit messages:
-
-- Triggered when PRs are opened or updated
-- Parses commit messages using conventional commit format
-- Groups changes by type (features, fixes, etc.)
-- Inserts a formatted changelog into the PR description
-
-For best results, format your commit messages following the conventional commit style:
-
-Where `<type>` is one of:
-- `feat`: New features
-- `fix`: Bug fixes
-- `docs`: Documentation changes
-- `refactor`: Code refactoring
-- `build`: Build-related changes
-- `ci`: CI/CD changes
-
-The changelog is automatically inserted between special comment markers in the PR description. You can still add your own content before or after the changelog.
-
-### Linting
-
-The repository includes automated linting and type checking:
-
-- Runs when PRs are opened or updated
-- Validates code quality and adherence to project standards
-- Uses ESLint to check for code quality issues
-- Runs TypeScript compiler to verify type safety
-- Automatically comments on the PR if any checks fail
-
-You can also run these checks locally:
+#### Option 2: With NPM Script
 
 ```bash
-# Run ESLint
+npm run docker:prod
+```
+
+To build the Docker image manually:
+
+```bash
+npm run docker:prod:build
+```
+
+---
+
+## 💻 Local Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Start production server:
+
+```bash
+npm run start
+```
+
+---
+
+## 🧪 Code Quality
+
+### ✅ Linting
+
+Run ESLint to check code quality:
+
+```bash
 npm run lint
+```
 
-# Run TypeScript type checking
+### ✅ Type Checking
+
+Run TypeScript compiler to verify type safety:
+
+```bash
 npm run type-check
 ```
 
-### Deployment
+### ✅ Formatting
 
-**Coming soon**
+Automatically format your code with Prettier:
 
-## Project Structure
+```bash
+npm run format
+```
 
-- `/app` - Next.js app directory
-- `/components` - React components
-- `/context` - React context providers
-- `/css` - CSS files including Tailwind
-- `/hooks` - Custom React hooks
-- `/lib` - Custom libraries
-- `/types` - TypeScript type definitions
-- `/utils` - Utility functions
+---
 
-## License
+## 🔁 Git Hooks
 
-MIT
+This project uses **Husky** to manage Git hooks.
+
+To install hooks:
+
+```bash
+npm run prepare
+```
+
+---
+
+Here’s the completed **"🧪 GitHub Actions"** section of your `README.md`, fully describing the workflow based on the YAML you've shared:
+
+---
+
+## 🧪 GitHub Actions
+
+This repository uses GitHub Actions to enforce code quality, build integrity, and containerization validation automatically on pull requests.
+
+### ✅ Workflow: `Next.js Lint, Test, Build, Docker`
+
+Triggered on pull requests (`opened` or `synchronize`), this workflow runs the following jobs:
+
+#### 1. 🔍 **Linting with ESLint**
+
+* Ensures all code follows the defined linting rules.
+* Helps maintain consistent code style and catch potential issues early.
+
+#### 2. ✅ **Type Checking with TypeScript**
+
+* Validates type safety across the project using `tsc --noEmit`.
+
+#### 3. 🐳 **Docker Build Check**
+
+* Installs Docker Compose CLI plugin manually.
+* Builds the production Docker image (`docker:prod:build`) to ensure the container setup works correctly and won't fail on deploy.
+
+#### 4. 💬 **Automatic PR Feedback**
+
+* If any of the above steps fail, a comment is added directly to the pull request:
+
+  > ❌ *Linting or type checking failed. Please fix the issues and push again.*
+
+
+#### Conventional Commit Format:
+
+```text
+<type>(optional scope): description
+```
+
+Where `<type>` is one of:
+
+* `feat`: New features
+* `fix`: Bug fixes
+* `docs`: Documentation changes
+* `refactor`: Code refactoring
+* `build`: Build-related changes
+* `ci`: CI/CD pipeline updates
+
+### ✅ Linting & Type Check on PRs
+
+* Runs `ESLint` and `tsc` on each PR
+* Comments automatically if any checks fail
+
+---
+
+## 📁 Project Structure
+
+```
+/app        - Next.js app directory (routing, pages, etc.)
+/components - Reusable React components
+/context    - Global React context providers
+/css        - Global styles and Tailwind config
+/hooks      - Custom React hooks
+/lib        - Helper libraries or APIs
+/types      - TypeScript type definitions
+/utils      - Utility functions
+```
+
+---
+
+## 📦 Available Scripts
+
+```json
+"dev": "next dev",
+"build": "next build",
+"start": "next start",
+"lint": "next lint",
+"format": "prettier --write .",
+"upgrade": "npx ncu -u && npm install",
+"type-check": "npx tsc --noEmit",
+"docker:prod:build": "docker compose --env-file ./.env.prod -f docker-compose.yml build",
+"docker:prod": "docker compose --env-file ./.env.prod -f docker-compose.yml up -d",
+"prepare": "husky install"
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE).
