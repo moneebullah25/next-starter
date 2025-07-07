@@ -1,6 +1,10 @@
+name: $PROJECT_NAME
+
 services:
   nextjs:
-    container_name: nextjs-fe
+    user: $UID
+    hostname: nextjs-server
+    container_name: nextjs-server-production
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,13 +14,8 @@ services:
     ports:
       - $NEXTJS_EXTERNAL_PORT:$NEXTJS_INTERNAL_PORT
     environment:
+      - NODE_ENV=production
       - PORT=$NEXTJS_INTERNAL_PORT
-    networks:
-      - next-network
 
 volumes:
   node_modules:
-
-networks:
-  next-network:
-    driver: bridge
