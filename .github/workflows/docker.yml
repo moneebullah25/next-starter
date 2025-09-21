@@ -24,16 +24,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Create environment files
-        run: |
-          echo "NODE_ENV=production" > .env.prod
-          echo "NEXTJS_EXTERNAL_PORT=3000" >> .env.prod
-          echo "NEXTJS_INTERNAL_PORT=3000" >> .env.prod
-
-          echo "NODE_ENV=development" > .env.dev
-          echo "NEXTJS_EXTERNAL_PORT=3000" >> .env.dev
-          echo "NEXTJS_INTERNAL_PORT=3000" >> .env.dev
-
       - name: Build Production Docker Image
         uses: docker/build-push-action@v5
         with:
@@ -49,7 +39,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile.dev
+          file: ./Dockerfile
+          target: development
           push: false
           tags: next-starter:dev
           cache-from: type=gha
@@ -63,12 +54,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Create environment files
-        run: |
-          echo "NODE_ENV=production" > .env.prod
-          echo "NEXTJS_EXTERNAL_PORT=3000" >> .env.prod
-          echo "NEXTJS_INTERNAL_PORT=3000" >> .env.prod
 
       - name: Test Production Container
         run: |
