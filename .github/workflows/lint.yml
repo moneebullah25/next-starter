@@ -1,4 +1,4 @@
-name: 🔄 CI Pipeline
+name: 🧪 Lint & Code Quality
 
 on:
   pull_request:
@@ -12,8 +12,8 @@ on:
       - develop
 
 jobs:
-  ci-pipeline:
-    name: 🔄 Run CI Pipeline
+  lint:
+    name: 🧪 Lint & Type Check
     runs-on: ubuntu-latest
 
     steps:
@@ -32,14 +32,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run quick validation
-        run: |
-          echo "🔍 Running quick validation checks..."
-          pnpm run lint
-          pnpm run type-check
-          echo "✅ Quick validation passed"
+      - name: Run ESLint
+        run: pnpm run lint
 
-      - name: Comment on PR if CI fails
+      - name: Run TypeScript type checking
+        run: pnpm run type-check
+
+      - name: Check code formatting
+        run: pnpm run format --check
+
+      - name: Comment on PR if linting fails
         if: ${{ failure() && github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
@@ -49,5 +51,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '❌ **CI Pipeline failed.** Please check the detailed workflows for specific issues.\n\n**Check these workflows:**\n- Lint & Code Quality\n- Build & Test\n- Docker Build & Test\n- Security Scan'
+              body: '❌ **Linting or type checking failed.** Please fix the issues and push again.\n\n**Failed checks:**\n- ESLint\n- TypeScript type checking\n- Code formatting'
             })

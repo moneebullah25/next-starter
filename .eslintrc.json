@@ -3,5 +3,6 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error"
-  }
+  },
+  "ignorePatterns": [".next/**", "out/**", "node_modules/**", "dist/**", "build/**"]
 }

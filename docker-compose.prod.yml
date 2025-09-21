@@ -1,0 +1,43 @@
+name: next-starter-prod
+
+services:
+  nextjs:
+    container_name: nextjs-production
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - ${NEXTJS_EXTERNAL_PORT:-3000}:${NEXTJS_INTERNAL_PORT:-3000}
+    environment:
+      - NODE_ENV=production
+      - PORT=${NEXTJS_INTERNAL_PORT:-3000}
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - next-prod-network
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+networks:
+  next-prod-network:
+    driver: bridge

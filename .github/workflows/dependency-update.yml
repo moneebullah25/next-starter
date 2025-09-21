@@ -1,0 +1,77 @@
+name: 📦 Dependency Updates
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Weekly on Monday at 9 AM
+  workflow_dispatch:
+
+jobs:
+  dependency-update:
+    name: 📦 Check for Dependency Updates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for outdated packages
+        run: |
+          echo "## 📦 Dependency Update Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Outdated Dependencies:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          pnpm outdated || echo "No outdated packages found" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for security vulnerabilities
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Security Audit:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          pnpm audit --audit-level moderate || echo "No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Create issue if updates available
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'dependencies'
+            });
+
+            if (issues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '📦 Dependency Updates Available',
+                body: `## Dependency Update Report
+                
+                This issue was automatically created because outdated dependencies were detected.
+                
+                Please review and update the following:
+                - Run \`pnpm outdated\` to see outdated packages
+                - Run \`pnpm audit\` to check for security vulnerabilities
+                - Update packages as needed
+                - Test thoroughly after updates
+                
+                **Note:** This issue will be automatically closed when dependencies are updated.`,
+                labels: ['dependencies', 'automated']
+              });
+            }

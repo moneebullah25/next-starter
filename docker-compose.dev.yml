@@ -1,0 +1,34 @@
+name: next-starter-dev
+
+services:
+  nextjs:
+    hostname: nextjs-dev-server
+    container_name: nextjs-development
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - ${NEXTJS_EXTERNAL_PORT:-3000}:${NEXTJS_INTERNAL_PORT:-3000}
+    environment:
+      - NODE_ENV=development
+      - PORT=${NEXTJS_INTERNAL_PORT:-3000}
+      - WATCHPACK_POLLING=true
+    networks:
+      - next-dev-network
+    # Enable hot reload
+    stdin_open: true
+    tty: true
+    # Development-specific settings
+    restart: "no"
+    # Security options for development
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  next-dev-network:
+    driver: bridge
