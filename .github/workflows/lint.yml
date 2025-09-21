@@ -11,6 +11,10 @@ on:
       - main
       - develop
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   lint:
     name: 🧪 Lint & Type Check

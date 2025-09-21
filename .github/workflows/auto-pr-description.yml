@@ -6,6 +6,10 @@ on:
       - opened
       - synchronize
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   generate-pull-request-changelog:
     runs-on: ubuntu-latest
@@ -13,23 +17,74 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Install octokit
-        run: pnpm add @octokit/action
+      - name: Generate PR Description
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
 
-      - name: Run Changelog Script
-        run: node ${{ github.workspace }}/.github/actions/changelog.v3.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            let description = '## 📝 Changes\n\n';
+
+            // Group files by type
+            const fileTypes = {
+              'Frontend': files.filter(f => f.filename.match(/\.(tsx?|jsx?|css|scss)$/)),
+              'Backend': files.filter(f => f.filename.match(/\.(ts|js)$/) && !f.filename.match(/\.(tsx?|jsx?)$/)),
+              'Config': files.filter(f => f.filename.match(/\.(json|yml|yaml|toml|env)$/)),
+              'Docs': files.filter(f => f.filename.match(/\.(md|txt)$/)),
+              'Other': files.filter(f => !f.filename.match(/\.(tsx?|jsx?|ts|js|css|scss|json|yml|yaml|toml|env|md|txt)$/))
+            };
+
+            Object.entries(fileTypes).forEach(([type, files]) => {
+              if (files.length > 0) {
+                description += `### ${type}\n`;
+                files.forEach(file => {
+                  const status = file.status === 'added' ? '➕' : 
+                               file.status === 'modified' ? '✏️' : 
+                               file.status === 'removed' ? '🗑️' : '📝';
+                  description += `- ${status} \`${file.filename}\`\n`;
+                });
+                description += '\n';
+              }
+            });
+
+            description += `## 📊 Summary\n`;
+            description += `- **Files changed:** ${files.length}\n`;
+            description += `- **Additions:** +${files.reduce((sum, f) => sum + f.additions, 0)}\n`;
+            description += `- **Deletions:** -${files.reduce((sum, f) => sum + f.deletions, 0)}\n`;
+            description += `- **Commits:** ${commits.length}\n\n`;
+
+            // Update PR description
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: description
+            });
