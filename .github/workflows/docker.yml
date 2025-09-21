@@ -13,8 +13,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker-build:
-    name: 🐳 Build Docker Images
+  docker-build-test:
+    name: 🐳 Build & Test Docker Images
     runs-on: ubuntu-latest
 
     steps:
@@ -45,15 +45,6 @@ jobs:
           tags: next-starter:dev
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  docker-test:
-    name: 🧪 Test Docker Images
-    runs-on: ubuntu-latest
-    needs: docker-build
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Test Production Container
         run: |
