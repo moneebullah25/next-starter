@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - staging
-      - main
+      - prod
   workflow_dispatch:
     inputs:
       environment:
@@ -87,15 +87,14 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
-          target: production
+          file: ./Dockerfile.dev
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            NODE_ENV=production
+            NODE_ENV=development
 
       - name: Deploy to staging server
         run: |
@@ -103,8 +102,8 @@ jobs:
           echo "Image: ${{ steps.meta.outputs.tags }}"
           
           # Create staging environment file
-          cat > .env.staging << EOF
-          NODE_ENV=production
+          cat > .env.dev << EOF
+          NODE_ENV=development
           PORT=3000
           NEXTJS_EXTERNAL_PORT=3000
           NEXTJS_INTERNAL_PORT=3000
@@ -115,9 +114,9 @@ jobs:
           EOF
 
           # Deploy using Docker Compose
-          docker-compose -f docker-compose.prod.yml --env-file .env.staging down || true
-          docker-compose -f docker-compose.prod.yml --env-file .env.staging pull
-          docker-compose -f docker-compose.prod.yml --env-file .env.staging up -d
+          docker-compose -f docker-compose.dev.yml --env-file .env.dev down || true
+          docker-compose -f docker-compose.dev.yml --env-file .env.dev pull
+          docker-compose -f docker-compose.dev.yml --env-file .env.dev up -d
 
       - name: Wait for deployment
         run: |
@@ -129,7 +128,7 @@ jobs:
           echo "🔍 Running health checks on staging..."
           max_attempts=10
           attempt=1
-          
+
           while [ $attempt -le $max_attempts ]; do
             echo "Health check attempt $attempt/$max_attempts"
             if curl -f http://localhost:3000/api/health; then
@@ -141,7 +140,7 @@ jobs:
               attempt=$((attempt + 1))
             fi
           done
-          
+
           if [ $attempt -gt $max_attempts ]; then
             echo "❌ Health check failed after $max_attempts attempts"
             exit 1
@@ -170,7 +169,7 @@ jobs:
   deploy-production:
     name: 🚀 Deploy to Production
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    if: github.ref == 'refs/heads/prod' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
     environment: production
     needs: []
 
@@ -249,7 +248,7 @@ jobs:
           echo "Image: ${{ steps.meta.outputs.tags }}"
           
           # Create production environment file
-          cat > .env.production << EOF
+          cat > .env.prod << EOF
           NODE_ENV=production
           PORT=3000
           NEXTJS_EXTERNAL_PORT=3000
@@ -261,9 +260,9 @@ jobs:
           EOF
 
           # Deploy using Docker Compose
-          docker-compose -f docker-compose.prod.yml --env-file .env.production down || true
-          docker-compose -f docker-compose.prod.yml --env-file .env.production pull
-          docker-compose -f docker-compose.prod.yml --env-file .env.production up -d
+          docker-compose -f docker-compose.prod.yml --env-file .env.prod down || true
+          docker-compose -f docker-compose.prod.yml --env-file .env.prod pull
+          docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
 
       - name: Wait for deployment
         run: |
@@ -275,7 +274,7 @@ jobs:
           echo "🔍 Running health checks on production..."
           max_attempts=15
           attempt=1
-          
+
           while [ $attempt -le $max_attempts ]; do
             echo "Health check attempt $attempt/$max_attempts"
             if curl -f http://localhost:3000/api/health; then
@@ -287,12 +286,12 @@ jobs:
               attempt=$((attempt + 1))
             fi
           done
-          
+
           if [ $attempt -gt $max_attempts ]; then
             echo "❌ Health check failed after $max_attempts attempts"
             echo "🔄 Attempting rollback..."
-            docker-compose -f docker-compose.prod.yml --env-file .env.production down
-            docker-compose -f docker-compose.prod.yml --env-file .env.production up -d nextjs-production-backup-* || true
+            docker-compose -f docker-compose.prod.yml --env-file .env.prod down
+            docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d nextjs-production-backup-* || true
             exit 1
           fi
 
