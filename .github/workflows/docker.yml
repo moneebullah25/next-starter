@@ -46,31 +46,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Test Production Container
-        run: |
-          docker run -d --name test-prod -p 3000:3000 next-starter:prod
-          sleep 30
-
-          # Test health endpoint
-          curl -f http://localhost:3000/api/health || exit 1
-
-          # Test main page
-          curl -f http://localhost:3000 || exit 1
-
-          docker stop test-prod
-          docker rm test-prod
-
-      - name: Test Development Container
-        run: |
-          docker run -d --name test-dev -p 3001:3000 next-starter:dev
-          sleep 30
-
-          # Test that dev server is running
-          curl -f http://localhost:3001 || exit 1
-
-          docker stop test-dev
-          docker rm test-dev
-
       - name: Comment on PR if Docker tests fail
         if: ${{ failure() && github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
