@@ -13,222 +13,243 @@
 
 ---
 
-## 🚀 Features
+## Features
 
-* ✅ Next.js 15+
-* ⚛️ React 19
-* 🐶 Husky for Git hooks
-* ✨ TypeScript
-* 💨 Tailwind CSS
-* 🐳 Fully Dockerised
-* 🧼 Prettier for consistent formatting
-* 🔍 ESLint & Type Checking
-* 🤖 GitHub Actions Integration
-
----
-
-## 📦 Getting Started
-
-This project is designed to run inside Docker containers for both development and production environments.
-
-### ✅ Prerequisites
-
-Make sure the following are installed on your machine:
-
-* [Docker](https://www.docker.com/)
-* [Docker Compose](https://docs.docker.com/compose/)
+* Next.js 15.5.3 with latest security patches
+* React 19 with modern features
+* TypeScript for type safety
+* Tailwind CSS for styling
+* Multi-stage Docker builds for development and production
+* Prettier for code formatting
+* ESLint for code quality
+* Husky for Git hooks with commitlint
+* Comprehensive GitHub Actions workflows
+* Security scanning with CodeQL and Trivy
+* Automated dependency updates
 
 ---
 
-## 🐳 Docker Usage & Debugging
+## Getting Started
 
-### 📄 Environment Variables
+This project supports both Docker-based and local development workflows.
 
-Set up your environment variables:
+### Prerequisites
+
+* [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
+* [Node.js](https://nodejs.org/) 20+ (for local development)
+* [pnpm](https://pnpm.io/) package manager
+
+---
+
+## Docker Development
+
+### Environment Setup
+
+Create environment files for different environments:
 
 ```bash
-cp .env.example .env
+# Development environment
+cp .env.example .env.dev
+
+# Production environment  
+cp .env.example .env.prod
 ```
 
-Then update `.env` with your custom values.
+### Development with Docker
 
-### 🚢 Production Deployment
-
-#### Option 1: With Docker Compose
+Start the development environment with hot reload:
 
 ```bash
-docker compose --env-file .env.prod -f docker-compose.yml up -d
+pnpm run docker:dev
 ```
 
-#### Option 2: With NPM Script
+Build development image:
 
 ```bash
-npm run docker:prod
+pnpm run docker:dev:build
 ```
 
-To build the Docker image manually:
+### Production Deployment
+
+Deploy to production:
 
 ```bash
-npm run docker:prod:build
+pnpm run docker:prod
+```
+
+Build production image:
+
+```bash
+pnpm run docker:prod:build
+```
+
+### Docker Management
+
+Stop containers:
+
+```bash
+pnpm run docker:dev:down    # Stop development
+pnpm run docker:prod:down   # Stop production
+```
+
+Clean up Docker system:
+
+```bash
+pnpm run docker:clean
 ```
 
 ---
 
-## 💻 Local Development
+## Local Development
 
 Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 Start development server:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Build for production:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Start production server:
 
 ```bash
-npm run start
+pnpm run start
 ```
 
 ---
 
-## 🧪 Code Quality
+## Code Quality
 
-### ✅ Linting
+### Linting
 
 Run ESLint to check code quality:
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
-### ✅ Type Checking
+### Type Checking
 
 Run TypeScript compiler to verify type safety:
 
 ```bash
-npm run type-check
+pnpm run type-check
 ```
 
-### ✅ Formatting
+### Formatting
 
 Automatically format your code with Prettier:
 
 ```bash
-npm run format
+pnpm run format
 ```
 
 ---
 
-## 🔁 Git Hooks
+## Git Hooks
 
-This project uses **Husky** to manage Git hooks.
+This project uses Husky for Git hooks with commitlint for conventional commits.
 
-To install hooks:
+Hooks are automatically installed when you run `pnpm install`. The following hooks are configured:
 
+* **pre-commit**: Runs ESLint and Prettier on staged files
+* **commit-msg**: Validates commit messages follow conventional commit format
+
+Example commit message format:
+
+```
+feat: add new user authentication feature
+fix: resolve login redirect issue
+docs: update API documentation
+```
+
+## GitHub Actions
+
+This repository includes comprehensive CI/CD workflows that run automatically on pull requests and pushes.
+
+### Workflows Overview
+
+**Lint Workflow**: Runs ESLint and TypeScript checks on every PR and push to main/develop branches.
+
+**Docker Workflow**: Builds and tests both development and production Docker images to ensure containerization works correctly.
+
+**Build & Test Workflow**: Tests the application across multiple Node.js versions (20, 22) to ensure compatibility.
+
+**Security Workflow**: Performs security audits, CodeQL analysis, and Trivy vulnerability scanning to maintain security standards.
+
+**Dependency Update Workflow**: Monitors for dependency updates and creates automated pull requests for non-breaking changes.
+
+**Deploy Workflow**: Handles deployment to staging and production environments with proper environment-specific configurations.
+
+**CI Pipeline Workflow**: Runs a quick validation pipeline for fast feedback on code changes.
+
+### Automatic Feedback
+
+When workflows fail, the system automatically:
+* Comments on pull requests with specific failure details
+* Provides links to workflow logs for debugging
+* Suggests fixes for common issues
+
+---
+
+## Project Structure
+
+```
+/app                    - Next.js app directory with routing
+/app/api/health         - Health check endpoint for Docker
+/components             - Reusable React components
+/context               - Global React context providers
+/css                    - Global styles and Tailwind configuration
+/hooks                  - Custom React hooks
+/lib                    - Helper libraries and utilities
+/types                  - TypeScript type definitions
+/utils                  - Utility functions
+.github/workflows       - GitHub Actions CI/CD workflows
+.husky                  - Git hooks configuration
+```
+
+---
+
+## Available Scripts
+
+### Development
 ```bash
-npm run prepare
+pnpm run dev              # Start development server
+pnpm run build           # Build for production
+pnpm run start           # Start production server
+pnpm run lint            # Run ESLint
+pnpm run format          # Format code with Prettier
+pnpm run type-check      # Run TypeScript type checking
+```
+
+### Docker Commands
+```bash
+pnpm run docker:dev              # Start development container
+pnpm run docker:dev:build        # Build development image
+pnpm run docker:dev:down         # Stop development container
+pnpm run docker:prod            # Start production container
+pnpm run docker:prod:build      # Build production image
+pnpm run docker:prod:down       # Stop production container
+pnpm run docker:clean           # Clean up Docker system
+```
+
+### Maintenance
+```bash
+pnpm run upgrade         # Update dependencies
 ```
 
 ---
 
-Here’s the completed **"🧪 GitHub Actions"** section of your `README.md`, fully describing the workflow based on the YAML you've shared:
-
----
-
-## 🧪 GitHub Actions
-
-This repository uses GitHub Actions to enforce code quality, build integrity, and containerization validation automatically on pull requests.
-
-### ✅ Workflow: `Next.js Lint, Test, Build, Docker`
-
-Triggered on pull requests (`opened` or `synchronize`), this workflow runs the following jobs:
-
-#### 1. 🔍 **Linting with ESLint**
-
-* Ensures all code follows the defined linting rules.
-* Helps maintain consistent code style and catch potential issues early.
-
-#### 2. ✅ **Type Checking with TypeScript**
-
-* Validates type safety across the project using `tsc --noEmit`.
-
-#### 3. 🐳 **Docker Build Check**
-
-* Installs Docker Compose CLI plugin manually.
-* Builds the production Docker image (`docker:prod:build`) to ensure the container setup works correctly and won't fail on deploy.
-
-#### 4. 💬 **Automatic PR Feedback**
-
-* If any of the above steps fail, a comment is added directly to the pull request:
-
-  > ❌ *Linting or type checking failed. Please fix the issues and push again.*
-
-
-#### Conventional Commit Format:
-
-```text
-<type>(optional scope): description
-```
-
-Where `<type>` is one of:
-
-* `feat`: New features
-* `fix`: Bug fixes
-* `docs`: Documentation changes
-* `refactor`: Code refactoring
-* `build`: Build-related changes
-* `ci`: CI/CD pipeline updates
-
-### ✅ Linting & Type Check on PRs
-
-* Runs `ESLint` and `tsc` on each PR
-* Comments automatically if any checks fail
-
----
-
-## 📁 Project Structure
-
-```
-/app        - Next.js app directory (routing, pages, etc.)
-/components - Reusable React components
-/context    - Global React context providers
-/css        - Global styles and Tailwind config
-/hooks      - Custom React hooks
-/lib        - Helper libraries or APIs
-/types      - TypeScript type definitions
-/utils      - Utility functions
-```
-
----
-
-## 📦 Available Scripts
-
-```json
-"dev": "next dev",
-"build": "next build",
-"start": "next start",
-"lint": "next lint",
-"format": "prettier --write .",
-"upgrade": "npx ncu -u && npm install",
-"type-check": "npx tsc --noEmit",
-"docker:prod:build": "docker compose --env-file ./.env.prod -f docker-compose.yml build",
-"docker:prod": "docker compose --env-file ./.env.prod -f docker-compose.yml up -d",
-"prepare": "husky install"
-```
-
----
-
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](./LICENSE).
