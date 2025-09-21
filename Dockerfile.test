@@ -1,0 +1,14 @@
+# This Dockerfile has intentional errors to test Docker workflow PR comments
+FROM node:22.14.0-alpine AS base
+
+# Missing WORKDIR
+# WORKDIR /app
+
+# Invalid command
+RUN invalid-command-that-will-fail
+
+# Copy non-existent file
+COPY non-existent-file.txt .
+
+# Invalid CMD
+CMD ["invalid-command"]
