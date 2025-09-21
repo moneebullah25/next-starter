@@ -6,6 +6,10 @@ on:
     types:
       - completed
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   workflow-status:
     name: 📊 Update Workflow Status

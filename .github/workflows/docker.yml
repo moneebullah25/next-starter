@@ -12,6 +12,10 @@ on:
       - develop
   workflow_dispatch:
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   docker-build-test:
     name: 🐳 Build & Test Docker Images
