@@ -5,6 +5,6 @@ node_modules
 /build
 
 .env
- 
+.DS_Store
 !.env.example
 tsconfig.tsbuildinfo
