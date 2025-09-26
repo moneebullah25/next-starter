@@ -59,6 +59,8 @@ cp .env.example .env.prod
 
 Start the development environment with hot reload:
 
+![alt text](doc/docker-dev.png)
+
 ```bash
 pnpm run docker:dev
 ```
@@ -72,6 +74,8 @@ pnpm run docker:dev:build
 ### Production Deployment
 
 Deploy to production:
+
+![alt text](doc/docker-prod.png)
 
 ```bash
 pnpm run docker:prod
@@ -101,6 +105,8 @@ pnpm run docker:clean
 ---
 
 ## Local Development
+
+![alt text](doc/local-dev.png)
 
 Install dependencies:
 

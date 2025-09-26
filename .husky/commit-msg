@@ -1,1 +1,8 @@
-pnpm commitlint --edit "$1"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Add node_modules/.bin to PATH
+export PATH="$PWD/node_modules/.bin:$PATH"
+
+# Run commitlint
+npx commitlint --edit "$1"

@@ -1,2 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Add node_modules/.bin to PATH
+export PATH="$PWD/node_modules/.bin:$PATH"
+
+# Run linting
 pnpm run lint
+
+# Run lint-staged
 pnpm lint-staged
