@@ -181,6 +181,9 @@ docs: update API documentation
 
 ## GitHub Actions
 
+![alt text](doc/husky-hooks.png)
+
+This repository includes comprehensive CI/CD workflows that run automatically on pull requests and pushes.
 
 ### Workflows Overview
 
