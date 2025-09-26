@@ -181,7 +181,6 @@ docs: update API documentation
 
 ## GitHub Actions
 
-This repository includes comprehensive CI/CD workflows that run automatically on pull requests and pushes.
 
 ### Workflows Overview
 
