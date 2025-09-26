@@ -16,7 +16,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "upgrade": "npx ncu -u && npm install",
     "type-check": "npx tsc --noEmit",
@@ -45,6 +45,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/eslintrc": "^3.3.1",
     "@types/mdx": "^2.0.13",
     "@types/node": "^24.0.10",
     "@types/react": "^19.1.8",

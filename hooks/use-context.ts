@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-function withDefinedContext<T>(context: React.Context<T>, target: string) {
+function useDefinedContext<T>(context: React.Context<T>, target: string) {
   const reactContext = useContext(context);
 
   if (reactContext === undefined) {
@@ -9,3 +9,5 @@ function withDefinedContext<T>(context: React.Context<T>, target: string) {
 
   return reactContext;
 }
+
+export { useDefinedContext };
