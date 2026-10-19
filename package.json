@@ -3,6 +3,7 @@
   "description": "A modern Next.js starter template with TypeScript, Tailwind CSS, and Docker support",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@10.34.7",
   "engines": {
     "node": ">=20.0.0"
   },
