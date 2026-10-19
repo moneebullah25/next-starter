@@ -1,8 +1,8 @@
 # ---- Base Stage ----
 FROM node:22.14.0-alpine AS base
 WORKDIR /app
-RUN corepack enable && echo "y" | corepack prepare pnpm@latest --activate
-COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && echo "y" | corepack prepare pnpm@10.34.7 --activate
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # ---- Dependencies Stage ----
 FROM base AS deps
@@ -24,7 +24,7 @@ FROM node:22.14.0-alpine AS production
 WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-RUN corepack enable && echo "y" | corepack prepare pnpm@latest --activate
+RUN corepack enable && echo "y" | corepack prepare pnpm@10.34.7 --activate
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
