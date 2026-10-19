@@ -11,11 +11,15 @@
   A modern, production-ready <strong>Next.js</strong> starter template powered by <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>, and fully <strong>Dockerised</strong> for seamless development and deployment.
 </p>
 
+![Next Starter home page after three clicks on Increment](docs/images/demo.png)
+
+*Home page served by `next start` after `next build`, captured with Playwright after clicking Increment three times.*
+
 ---
 
 ## Features
 
-* Next.js 15.5.3 with latest security patches
+* Next.js 15 (App Router)
 * React 19 with modern features
 * TypeScript for type safety
 * Tailwind CSS for styling
@@ -45,7 +49,7 @@ This project supports both Docker-based and local development workflows.
 
 ### Environment Setup
 
-Create environment files for different environments:
+`.env.dev`, `.env.prod` and `.env.test` are committed with non-secret defaults. To recreate them from the template (set `NODE_ENV` accordingly):
 
 ```bash
 # Development environment
@@ -187,7 +191,7 @@ This repository includes comprehensive CI/CD workflows that run automatically on
 
 ### Workflows Overview
 
-**Lint Workflow**: Runs ESLint and TypeScript checks on every PR and push to main/develop branches.
+**Lint Workflow**: Runs ESLint and TypeScript checks on every PR and push to main/dev branches.
 
 **Docker Workflow**: Builds and tests both development and production Docker images to ensure containerization works correctly.
 
